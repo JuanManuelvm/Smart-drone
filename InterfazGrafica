@@ -72,8 +72,8 @@ class LaberintoApp:
     def mostrar_menu_Informado(self):
         """Muestra un menú desplegable con las opciones de movimiento"""
         menu = Menu(self.root, tearoff=0)
-        menu.add_command(label="Avara", command=lambda: self.seleccionar_estrategia("Amplitud"))
-        menu.add_command(label="A*", command=lambda: self.seleccionar_estrategia("Costo"))
+        menu.add_command(label="Avara", command=lambda: self.seleccionar_estrategia("Avara"))
+        menu.add_command(label="A*", command=lambda: self.seleccionar_estrategia("A*"))
         
         # Mostrar el menú cerca del botón
         x = self.boton2.winfo_rootx()
@@ -92,6 +92,10 @@ class LaberintoApp:
             self.mover_costo()
         elif estrategia == "Profundidad":
             self.mover_profundidad()
+        elif estrategia == "Avara":
+            self.mover_Avara()
+        elif estrategia == "A*":
+            self.mover_A()
     
     def mover_amplitud(self):
         """Implementación básica de movimiento por amplitud"""
@@ -109,6 +113,18 @@ class LaberintoApp:
         """Implementación básica de movimiento por profundidad"""
         print("Ejecutando búsqueda en profundidad...")
         # Aquí iría el algoritmo real de búsqueda en profundidad
+        self.mover_dron_simple()
+
+    def mover_avara(self):
+        """Implementación básica de movimiento por Avara"""
+        print("Ejecutando búsqueda en Avara...")
+        # Aquí iría el algoritmo real de búsqueda en Avara
+        self.mover_dron_simple()
+    
+    def mover_A(self):
+        """Implementación básica de movimiento por A*"""
+        print("Ejecutando búsqueda en A*...")
+        # Aquí iría el algoritmo real de búsqueda en A*
         self.mover_dron_simple()
     
     def mover_dron_simple(self):
