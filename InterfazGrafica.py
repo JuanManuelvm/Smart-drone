@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import Canvas, Button, Menu
-import Amplitud, Costo, Profundidad, Avara
+import Amplitud, Costo, Profundidad, Avara, A
 
 class LaberintoApp:
     def __init__(self, root):
@@ -134,7 +134,9 @@ class LaberintoApp:
         """Implementación básica de movimiento por A*"""
         print("Ejecutando búsqueda en A*...")
         # Aquí iría el algoritmo real de búsqueda en A*
-        self.mover_dron_simple()
+        self.reiniciar()
+        pasos = A.buscar_A()
+        self.mover_dron_simple(pasos)
     
     def mover_dron_simple(self, pasos):
         """Función simple para mover el dron (ejemplo)"""
