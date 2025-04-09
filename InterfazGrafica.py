@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import Canvas, Button, Menu
 import Amplitud, Costo, Profundidad, Avara, A
+import time
 
 class LaberintoApp:
     def __init__(self, root):
@@ -36,8 +37,10 @@ class LaberintoApp:
         # Dibujar el laberinto
         self.dibujar_laberinto()
         
+        
         # Crear un frame para los botones
         self.botones_frame = tk.Frame(root)
+        
         self.botones_frame.pack(side=tk.BOTTOM, pady=10)
         
         # Crear botón 1 con menú desplegable
@@ -57,6 +60,7 @@ class LaberintoApp:
         
         # Variable para almacenar la estrategia seleccionada
         self.estrategia = None
+        
     
     def mostrar_menu_noInformado(self):
         """Muestra un menú desplegable con las opciones de movimiento"""
@@ -105,6 +109,7 @@ class LaberintoApp:
         self.reiniciar()
         pasos = Amplitud.busqueda_amplitud()
         self.mover_dron_simple(pasos)
+        
     
     def mover_costo(self):
         """Implementación básica de movimiento por costo"""
@@ -139,25 +144,37 @@ class LaberintoApp:
         self.mover_dron_simple(pasos)
     
     def mover_dron_simple(self, pasos):
-        """Función simple para mover el dron (ejemplo)"""
+        """Función simple para mover el dron (ejemplo) y actualizar inmediatamente el laberinto"""
         if not self.dron_pos:
             return
-            
-        i, j = self.dron_pos
-        
-        for ni, nj in pasos:
+
+        # Función interna para mover el dron de un paso
+        def mover_paso(ni, nj):
+            i, j = self.dron_pos
             if 0 <= ni < len(self.laberinto) and 0 <= nj < len(self.laberinto[0]):
                 if self.laberinto[ni][nj] == 0 or self.laberinto[ni][nj] == 3 or self.laberinto[ni][nj] == 4:  # Solo se puede mover a espacios vacíos
                     # Actualizar matriz
                     self.laberinto[i][j] = 0
                     self.laberinto[ni][nj] = 2
                     self.dron_pos = (ni, nj)
-                    
+
                     # Redibujar laberinto
                     self.canvas.delete("all")
                     self.dibujar_laberinto()
-        return
-    
+
+        # Función recursiva para mover el dron en cada paso con retraso
+        def mover_con_retraso(indice_paso):
+            if indice_paso < len(pasos):
+                ni, nj = pasos[indice_paso]
+                mover_paso(ni, nj)
+                # Llamar a la función nuevamente después de 500 ms para el siguiente paso
+                root.after(500, mover_con_retraso, indice_paso + 1)
+
+        # Comenzar el movimiento con el primer paso
+        pasos_totales = len(pasos)
+        mover_con_retraso(0)
+
+
     def encontrar_dron(self):
         """Encuentra la posición del dron en la matriz"""
         for i, fila in enumerate(self.laberinto):
@@ -187,8 +204,8 @@ class LaberintoApp:
                     self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
                     self.canvas.create_rectangle(x1+5, y1+5, x2-5, y2-5, fill="brown")
                 else:  # Espacio vacío (0)
-                    self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")
-    
+                    self.canvas.create_rectangle(x1, y1, x2, y2, fill="white", outline="black")          
+        
     def reiniciar(self):
         """Reinicia el laberinto a su estado original"""
         self.laberinto = [
@@ -209,6 +226,7 @@ class LaberintoApp:
         self.dibujar_laberinto()
 
 # Crear la ventana principal
+
 root = tk.Tk()
 app = LaberintoApp(root)
 root.mainloop()
