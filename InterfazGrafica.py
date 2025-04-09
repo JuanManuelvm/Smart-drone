@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import Canvas, Button, Menu
+import Amplitud
 
 class LaberintoApp:
     def __init__(self, root):
@@ -93,7 +94,7 @@ class LaberintoApp:
         elif estrategia == "Profundidad":
             self.mover_profundidad()
         elif estrategia == "Avara":
-            self.mover_Avara()
+            self.mover_avara()
         elif estrategia == "A*":
             self.mover_A()
     
@@ -101,7 +102,8 @@ class LaberintoApp:
         """Implementación básica de movimiento por amplitud"""
         print("Ejecutando búsqueda en amplitud...")
         # Aquí iría el algoritmo real de búsqueda en amplitud
-        self.mover_dron_simple()
+        pasos = Amplitud.busqueda_amplitud()
+        self.mover_dron_simple(pasos)
     
     def mover_costo(self):
         """Implementación básica de movimiento por costo"""
@@ -127,17 +129,16 @@ class LaberintoApp:
         # Aquí iría el algoritmo real de búsqueda en A*
         self.mover_dron_simple()
     
-    def mover_dron_simple(self):
+    def mover_dron_simple(self, pasos):
         """Función simple para mover el dron (ejemplo)"""
         if not self.dron_pos:
             return
             
         i, j = self.dron_pos
-        nuevas_posiciones = [(i-1, j), (i+1, j), (i, j-1), (i, j+1)]  # Arriba, abajo, izquierda, derecha
         
-        for ni, nj in nuevas_posiciones:
+        for ni, nj in pasos:
             if 0 <= ni < len(self.laberinto) and 0 <= nj < len(self.laberinto[0]):
-                if self.laberinto[ni][nj] == 0:  # Solo se puede mover a espacios vacíos
+                if self.laberinto[ni][nj] == 0 or self.laberinto[ni][nj] == 3 or self.laberinto[ni][nj] == 4:  # Solo se puede mover a espacios vacíos
                     # Actualizar matriz
                     self.laberinto[i][j] = 0
                     self.laberinto[ni][nj] = 2
@@ -146,7 +147,7 @@ class LaberintoApp:
                     # Redibujar laberinto
                     self.canvas.delete("all")
                     self.dibujar_laberinto()
-                    return
+        return
     
     def encontrar_dron(self):
         """Encuentra la posición del dron en la matriz"""
