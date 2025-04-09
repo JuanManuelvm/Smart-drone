@@ -118,6 +118,7 @@ def busqueda_costo():
   print(recorrido[0].padre)
 
   pasos = []
+  costo = dronActual.costo
   while dronActual.padre != 0:
     print(dronActual.ubicacion)
     print(dronActual.iteracion)
@@ -125,4 +126,4 @@ def busqueda_costo():
     dronActual = dronActual.padre
 
   print(pasos)
-  return(pasos)
+  return([pasos,costo])
