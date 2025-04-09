@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import Canvas, Button, Menu
-import Amplitud, Costo
+import Amplitud, Costo, Profundidad
 
 class LaberintoApp:
     def __init__(self, root):
@@ -118,7 +118,9 @@ class LaberintoApp:
         """Implementación básica de movimiento por profundidad"""
         print("Ejecutando búsqueda en profundidad...")
         # Aquí iría el algoritmo real de búsqueda en profundidad
-        self.mover_dron_simple()
+        self.reiniciar()
+        pasos = Profundidad.busqueda_profundidad()
+        self.mover_dron_simple(pasos)
 
     def mover_avara(self):
         """Implementación básica de movimiento por Avara"""
