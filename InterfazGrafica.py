@@ -141,8 +141,8 @@ class LaberintoApp:
         print("Ejecutando búsqueda en A*...")
         # Aquí iría el algoritmo real de búsqueda en A*
         self.reiniciar()
-        pasos = A.buscar_A()
-        self.mover_dron_simple(pasos)
+        datos = A.buscar_A()
+        self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
     
     def mover_dron_simple(self, pasos, nodos, tiempo, costo=None):
         """Función simple para mover el dron (ejemplo) y actualizar inmediatamente el laberinto"""
@@ -183,11 +183,11 @@ class LaberintoApp:
 
     def mostrar_resultados(self, pasos_totales, nodos, tiempo, costo=None):
         """Muestra los resultados al final del recorrido"""
-        mensaje = f"El recorrido finalizó con un arbol de profundidad {pasos_totales} . \n"
-        mensaje += f"El recorrido finalizó con {nodos} nodos expandidos . \n"
-        mensaje += f"El recorrido finalizó con un tiempo de {tiempo} segundos . \n"         
+        mensaje = f"Profundidad = {pasos_totales}. \n"
+        mensaje += f"Nodos expandios = {nodos}. \n"
+        mensaje += f"Tiempo de ejecucion {tiempo} segundos. \n"         
         if costo is not None:
-            mensaje += f"El costo total fue: {costo}."
+            mensaje += f"Costo total =  {costo}."
         print(mensaje)
         MessageBox.showinfo("Resultado!", mensaje) # título, mensaje
 
