@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import Canvas, Button, Menu
 import Amplitud, Costo, Profundidad, Avara, A
-import time
+from tkinter import messagebox as MessageBox
 
 class LaberintoApp:
     def __init__(self, root):
@@ -33,15 +33,7 @@ class LaberintoApp:
                             width=len(self.laberinto[0])*self.cell_size, 
                             height=len(self.laberinto)*self.cell_size)
         
-        self.canvas.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-        
-        # Crear un cuadro de resultados al lado del laberinto
-        self.resultados_frame = tk.Frame(root, width=200, height=600, bg="lightgray")
-        self.resultados_frame.pack(side=tk.RIGHT, fill=tk.Y)
-
-        # Crear una etiqueta para mostrar los resultados
-        self.resultados_label = tk.Label(self.resultados_frame, text="Resultados", font=("Arial", 10), bg="lightgray", anchor="w", justify=tk.LEFT, wraplength=180)
-        self.resultados_label.pack(padx=10, pady=20)
+        self.canvas.pack(expand=True)
 
         # Dibujar el laberinto
         self.dibujar_laberinto()
@@ -50,7 +42,7 @@ class LaberintoApp:
         # Crear un frame para los botones
         self.botones_frame = tk.Frame(root)
         
-        self.botones_frame.pack(side=tk.BOTTOM, pady=10, fill=tk.X)
+        self.botones_frame.pack(expand=True, pady=10)
         
         # Crear botón 1 con menú desplegable
         self.boton1 = Button(self.botones_frame, text="No informado", command=self.mostrar_menu_noInformado)
@@ -116,8 +108,8 @@ class LaberintoApp:
         print("Ejecutando búsqueda en amplitud...")
         # Aquí iría el algoritmo real de búsqueda en amplitud
         self.reiniciar()
-        pasos = Amplitud.busqueda_amplitud()
-        self.mover_dron_simple(pasos)
+        datos = Amplitud.busqueda_amplitud()
+        self.mover_dron_simple(datos[0],datos[1], datos[2])
         
     
     def mover_costo(self):
@@ -126,7 +118,7 @@ class LaberintoApp:
         # Aquí iría el algoritmo real de búsqueda de 
         self.reiniciar()
         datos = Costo.busqueda_costo()
-        self.mover_dron_simple(datos[0],datos[1])
+        self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
     
     def mover_profundidad(self):
         """Implementación básica de movimiento por profundidad"""
@@ -152,7 +144,7 @@ class LaberintoApp:
         pasos = A.buscar_A()
         self.mover_dron_simple(pasos)
     
-    def mover_dron_simple(self, pasos, costo=None):
+    def mover_dron_simple(self, pasos, nodos, tiempo, costo=None):
         """Función simple para mover el dron (ejemplo) y actualizar inmediatamente el laberinto"""
         if not self.dron_pos:
             return
@@ -185,17 +177,19 @@ class LaberintoApp:
 
          # Al finalizar el recorrido, mostrar mensaje con los resultados
         if costo is not None:
-            self.mostrar_resultados(pasos_totales, costo)
+            self.mostrar_resultados(pasos_totales, nodos, tiempo, costo)
         else:
-            self.mostrar_resultados(pasos_totales)
+            self.mostrar_resultados(pasos_totales, nodos, tiempo,)
 
-    def mostrar_resultados(self, pasos_totales, costo=None):
+    def mostrar_resultados(self, pasos_totales, nodos, tiempo, costo=None):
         """Muestra los resultados al final del recorrido"""
-        mensaje = f"El recorrido finalizó un arbol de profundidad {pasos_totales} . \n"
+        mensaje = f"El recorrido finalizó con un arbol de profundidad {pasos_totales} . \n"
+        mensaje += f"El recorrido finalizó con {nodos} nodos expandidos . \n"
+        mensaje += f"El recorrido finalizó con un tiempo de {tiempo} segundos . \n"         
         if costo is not None:
             mensaje += f"El costo total fue: {costo}."
         print(mensaje)
-        self.resultados_label.config(text=mensaje)
+        MessageBox.showinfo("Resultado!", mensaje) # título, mensaje
 
     def encontrar_dron(self):
         """Encuentra la posición del dron en la matriz"""

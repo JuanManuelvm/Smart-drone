@@ -1,3 +1,4 @@
+import time
 #Ingresar los datos de un mundo determinado por medio de un archivo de texto que siga las convenciones dadas anteriormente.
 # Función para leer el archivo y organizar la información en una matriz
 def leer_matriz_desde_archivo(ambiente_txt):
@@ -29,6 +30,8 @@ class dron():
     self.iteracion = iteracion
 
 def busqueda_amplitud():
+    tiempoInicio = time.time()
+    print(tiempoInicio)
     #Ciclo para definir cual es el inicio del dron
     inicio = [0,0]
     for fila in range(len(ambiente)):
@@ -40,6 +43,7 @@ def busqueda_amplitud():
     #Variables
     recorrido = [raiz]
     dronActual = recorrido[0]
+    nodos = 0
 
     #Recorrido
     while dronActual.cajas != 3:
@@ -86,6 +90,7 @@ def busqueda_amplitud():
 
         recorrido.pop(0)
         dronActual = recorrido[0]
+        nodos += 1
 
     print("Termino en: ==================================")
     print(recorrido[0].ubicacion)
@@ -100,5 +105,8 @@ def busqueda_amplitud():
         pasos.insert(0,dronActual.ubicacion)
         dronActual = dronActual.padre
 
+    tiempoFinal = time.time()
+  
+    tiempo = tiempoFinal-tiempoInicio
     print(pasos)
-    return(pasos)
+    return([pasos,nodos,tiempo])
