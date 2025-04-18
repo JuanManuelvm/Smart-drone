@@ -10,20 +10,21 @@ class LaberintoApp:
         
         # Configurar el tamaño de la ventana
         self.root.geometry("750x600")
-        
         # Matriz del laberinto (0: vacío, 1: muro, 2: dron, 3: alerta, 4: caja)
-        self.laberinto = [
-            [1, 1, 0, 0, 0, 0, 0, 1, 1, 1],
-            [1, 1, 0, 1, 0, 1, 0, 1, 1, 1],
-            [0, 2, 0, 3, 4, 4, 0, 0, 0, 0],
-            [0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-            [3, 3, 0, 1, 0, 1, 1, 1, 1, 1],
-            [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
-            [1, 1, 0, 1, 1, 1, 1, 1, 1, 0],
-            [1, 1, 0, 0, 0, 0, 4, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ]
+        def leer_matriz_desde_archivo(ambiente_txt):
+            matriz = []
+            with open(ambiente_txt, 'r') as archivo:
+                for línea in archivo:
+                    # Convertir cada línea en una lista de enteros
+                    fila = [int(numero) for numero in línea.split()]
+                    matriz.append(fila)
+            return matriz
+
+        # Nombre del archivo
+        ambiente_txt = 'Prueba1.txt'
+
+        # Leer la matriz desde el archivo
+        self.laberinto = leer_matriz_desde_archivo(ambiente_txt)
         
         # Tamaño de cada celda
         self.cell_size = 50
@@ -224,18 +225,20 @@ class LaberintoApp:
         
     def reiniciar(self):
         """Reinicia el laberinto a su estado original"""
-        self.laberinto = [
-            [1, 1, 0, 0, 0, 0, 0, 1, 1, 1],
-            [1, 1, 0, 1, 0, 1, 0, 1, 1, 1],
-            [0, 2, 0, 3, 4, 4, 0, 0, 0, 0],
-            [0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
-            [0, 1, 1, 1, 0, 0, 0, 0, 0, 0],
-            [3, 3, 0, 1, 0, 1, 1, 1, 1, 1],
-            [1, 1, 0, 1, 0, 0, 0, 0, 0, 0],
-            [1, 1, 0, 1, 1, 1, 1, 1, 1, 0],
-            [1, 1, 0, 0, 0, 0, 4, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ]
+        # Matriz del laberinto (0: vacío, 1: muro, 2: dron, 3: alerta, 4: caja)
+        def leer_matriz_desde_archivo(ambiente_txt):
+            matriz = []
+            with open(ambiente_txt, 'r') as archivo:
+                for línea in archivo:
+                    # Convertir cada línea en una lista de enteros
+                    fila = [int(numero) for numero in línea.split()]
+                    matriz.append(fila)
+            return matriz
+        # Nombre del archivo
+        ambiente_txt = 'Prueba1.txt'
+
+        # Leer la matriz desde el archivo
+        self.laberinto = leer_matriz_desde_archivo(ambiente_txt)
         self.dron_pos = self.encontrar_dron()
         self.estrategia = None
         self.canvas.delete("all")
