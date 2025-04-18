@@ -1,3 +1,4 @@
+import time
 #Ingresar los datos de un mundo determinado por medio de un archivo de texto que siga las convenciones dadas anteriormente.
 # Función para leer el archivo y organizar la información en una matriz
 def leer_matriz_desde_archivo(ambiente_txt):
@@ -30,7 +31,9 @@ class dron():
     self.iteracion = iteracion
 
 def busqueda_avara():
-  #Ciclo para definir cual es el inicio del dron
+    tiempoInicio = time.time()
+    print(tiempoInicio)
+    #Ciclo para definir cual es el inicio del dron
     inicio = [0,0]
     cajas = []
     for fila in range(len(ambiente)):
@@ -45,6 +48,7 @@ def busqueda_avara():
     recorrido = [raiz]
     dronActual = recorrido[0]
     recorrido.pop(0)
+    nodos = 0
 
     #Recorrido
     while dronActual.cajasR != []:
@@ -54,7 +58,7 @@ def busqueda_avara():
         abajo = [dronActual.ubicacion[0] + 1, dronActual.ubicacion[1]]
 
         #comprobar el camino derecho
-        if derecha[1] < len(ambiente[0]) and ambiente[derecha[0]][derecha[1]] != 1 and [derecha[0],derecha[1]] != dronActual.padre.ubicacion:
+        if derecha[1] < len(ambiente[0]) and ambiente[derecha[0]][derecha[1]] != 1 and ([derecha[0],derecha[1]] != dronActual.padre.ubicacion or ambiente[derecha[0]][derecha[1]-1] == 4):
             if ambiente[derecha[0]][derecha[1]] == 4 and [derecha[0],derecha[1]] in dronActual.cajasR:
                 newCajas = dronActual.cajasR.copy()
                 newCajas.remove([derecha[0],derecha[1]])
@@ -65,7 +69,7 @@ def busqueda_avara():
                 recorrido.append(hijo)
 
         #comprobar el camino izquierdo
-        if izquierda[1] >= 0 and ambiente[izquierda[0]][izquierda[1]] != 1 and [izquierda[0],izquierda[1]] != dronActual.padre.ubicacion:
+        if izquierda[1] >= 0 and ambiente[izquierda[0]][izquierda[1]] != 1 and ([izquierda[0],izquierda[1]] != dronActual.padre.ubicacion or ambiente[izquierda[0]][izquierda[1]+1] == 4):
             if ambiente[izquierda[0]][izquierda[1]] == 4 and [izquierda[0],izquierda[1]] in dronActual.cajasR:
                 newCajas = dronActual.cajasR.copy()
                 newCajas.remove([izquierda[0],izquierda[1]])
@@ -76,7 +80,7 @@ def busqueda_avara():
                 recorrido.append(hijo)
 
         #comprobar el camino arriba
-        if arriba[0] >= 0 and ambiente[arriba[0]][arriba[1]] != 1 and [arriba[0],arriba[1]] != dronActual.padre.ubicacion:
+        if arriba[0] >= 0 and ambiente[arriba[0]][arriba[1]] != 1 and ([arriba[0],arriba[1]] != dronActual.padre.ubicacion or ambiente[arriba[0]+1][arriba[1]] == 4):
             if ambiente[arriba[0]][arriba[1]] == 4 and [arriba[0],arriba[1]] in dronActual.cajasR:
                 newCajas = dronActual.cajasR.copy()
                 newCajas.remove([arriba[0],arriba[1]])
@@ -87,7 +91,7 @@ def busqueda_avara():
                 recorrido.append(hijo)
 
         #comprobar el camino abajo
-        if abajo[0] < len(ambiente) and ambiente[abajo[0]][abajo[1]] != 1 and [abajo[0],abajo[1]] != dronActual.padre.ubicacion:
+        if abajo[0] < len(ambiente) and ambiente[abajo[0]][abajo[1]] != 1 and ([abajo[0],abajo[1]] != dronActual.padre.ubicacion or ambiente[abajo[0]-1][abajo[1]] == 4):
             if ambiente[abajo[0]][abajo[1]] == 4 and [abajo[0],abajo[1]] in dronActual.cajasR:
                 newCajas = dronActual.cajasR.copy()
                 newCajas.remove([abajo[0],abajo[1]])
@@ -132,6 +136,7 @@ def busqueda_avara():
                 recorrido.pop(0)
                 dronActual = recorrido[0]
             ciclo = ciclo.padre
+        nodos += 1
 
     print("Termino en: ==================================")
     print(dronActual.ubicacion)
@@ -144,5 +149,8 @@ def busqueda_avara():
         pasos.insert(0,dronActual.ubicacion)
         dronActual = dronActual.padre
 
-    print(pasos)
-    return(pasos)
+    tiempoFinal = time.time()
+  
+    tiempo = tiempoFinal-tiempoInicio
+    print(tiempo)
+    return([pasos,nodos,tiempo,])

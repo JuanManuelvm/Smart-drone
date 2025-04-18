@@ -49,8 +49,7 @@ def busqueda_costo():
 
   #Resultados finales
   nodos = 0
-  tiempo = 0
-
+  
   #Recorrido
   while dronActual.cajas != 3:
     derecha = [dronActual.ubicacion[0],dronActual.ubicacion[1] + 1]

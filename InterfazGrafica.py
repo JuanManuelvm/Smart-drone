@@ -125,16 +125,16 @@ class LaberintoApp:
         print("Ejecutando búsqueda en profundidad...")
         # Aquí iría el algoritmo real de búsqueda en profundidad
         self.reiniciar()
-        pasos = Profundidad.busqueda_profundidad()
-        self.mover_dron_simple(pasos)
+        datos = Profundidad.busqueda_profundidad()
+        self.mover_dron_simple(datos[0],datos[1], datos[2])
 
     def mover_avara(self):
         """Implementación básica de movimiento por Avara"""
         print("Ejecutando búsqueda en Avara...")
         # Aquí iría el algoritmo real de búsqueda en Avara
         self.reiniciar()
-        pasos = Avara.busqueda_avara()
-        self.mover_dron_simple(pasos)
+        datos = Avara.busqueda_avara()
+        self.mover_dron_simple(datos[0],datos[1], datos[2])
     
     def mover_A(self):
         """Implementación básica de movimiento por A*"""
