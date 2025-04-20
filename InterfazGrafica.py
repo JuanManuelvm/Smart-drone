@@ -3,6 +3,8 @@ from tkinter import Canvas, Button, Menu
 import Amplitud, Costo, Profundidad, Avara, A
 from tkinter import messagebox as MessageBox
 
+NuevoAmbiente = "Prueba1.txt" 
+
 class LaberintoApp:
     def __init__(self, root):
         self.root = root
@@ -21,7 +23,7 @@ class LaberintoApp:
             return matriz
 
         # Nombre del archivo
-        ambiente_txt = 'Prueba1.txt'
+        ambiente_txt = NuevoAmbiente
 
         # Leer la matriz desde el archivo
         self.laberinto = leer_matriz_desde_archivo(ambiente_txt)
@@ -109,7 +111,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en amplitud...")
         # Aquí iría el algoritmo real de búsqueda en amplitud
         self.reiniciar()
-        datos = Amplitud.busqueda_amplitud()
+        datos = Amplitud.busqueda_amplitud(NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
         
     
@@ -118,7 +120,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda de costo uniforme...")
         # Aquí iría el algoritmo real de búsqueda de 
         self.reiniciar()
-        datos = Costo.busqueda_costo()
+        datos = Costo.busqueda_costo(NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
     
     def mover_profundidad(self):
@@ -126,7 +128,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en profundidad...")
         # Aquí iría el algoritmo real de búsqueda en profundidad
         self.reiniciar()
-        datos = Profundidad.busqueda_profundidad()
+        datos = Profundidad.busqueda_profundidad(NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
 
     def mover_avara(self):
@@ -134,7 +136,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en Avara...")
         # Aquí iría el algoritmo real de búsqueda en Avara
         self.reiniciar()
-        datos = Avara.busqueda_avara()
+        datos = Avara.busqueda_avara(NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
     
     def mover_A(self):
@@ -142,7 +144,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en A*...")
         # Aquí iría el algoritmo real de búsqueda en A*
         self.reiniciar()
-        datos = A.buscar_A()
+        datos = A.buscar_A(NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
     
     def mover_dron_simple(self, pasos, nodos, tiempo, costo=None):
@@ -235,7 +237,7 @@ class LaberintoApp:
                     matriz.append(fila)
             return matriz
         # Nombre del archivo
-        ambiente_txt = 'Prueba1.txt'
+        ambiente_txt = NuevoAmbiente
 
         # Leer la matriz desde el archivo
         self.laberinto = leer_matriz_desde_archivo(ambiente_txt)

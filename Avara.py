@@ -1,25 +1,4 @@
 import time
-#Ingresar los datos de un mundo determinado por medio de un archivo de texto que siga las convenciones dadas anteriormente.
-# Función para leer el archivo y organizar la información en una matriz
-def leer_matriz_desde_archivo(ambiente_txt):
-    matriz = []
-    with open(ambiente_txt, 'r') as archivo:
-        for línea in archivo:
-            # Convertir cada línea en una lista de enteros
-            fila = [int(numero) for numero in línea.split()]
-            matriz.append(fila)
-    return matriz
-
-# Nombre del archivo
-ambiente_txt = 'Prueba1.txt'
-
-# Leer la matriz desde el archivo
-ambiente = leer_matriz_desde_archivo(ambiente_txt)
-
-# Imprimir la matriz
-for fila in ambiente:
-    print(fila)
-
 
 #Clase dron
 class dron():
@@ -30,7 +9,23 @@ class dron():
     self.cajasR = cajasR
     self.iteracion = iteracion
 
-def busqueda_avara():
+def busqueda_avara(ambiente_txt):
+    #Ingresar los datos de un mundo determinado por medio de un archivo de texto que siga las convenciones dadas anteriormente.
+    # Función para leer el archivo y organizar la información en una matriz
+    def leer_matriz_desde_archivo(ambiente_txt):
+        matriz = []
+        with open(ambiente_txt, 'r') as archivo:
+            for línea in archivo:
+                # Convertir cada línea en una lista de enteros
+                fila = [int(numero) for numero in línea.split()]
+                matriz.append(fila)
+        return matriz
+
+    # Nombre del archivo
+
+    # Leer la matriz desde el archivo
+    ambiente = leer_matriz_desde_archivo(ambiente_txt)
+    #=================================================================
     tiempoInicio = time.time()
     print(tiempoInicio)
     #Ciclo para definir cual es el inicio del dron
