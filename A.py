@@ -115,41 +115,64 @@ def buscar_A(ambiente_txt):
                     hijo = dron([abajo[0],abajo[1]],dronActual,dronActual.cajas, dronActual.cajasR, dronActual.iteracion + 1, dronActual.costo+1)
                     recorrido.append(hijo)
 
-        #==========================================================================================================
-        min_heuristica = 10000
+        # ===== BLOQUE DE HEURÍSTICA MODIFICADO PARA A* =====
+        min_total = float('inf')  # f(n) = g(n) + h(n)
+        mejor_indice = 0
 
-        print(str(dronActual.ubicacion)+"==========================================================")
-        print(dronActual.cajas)
+        print(f"{dronActual.ubicacion}==========================================================")
+        print(f"Cajas recolectadas: {dronActual.cajas}, Restantes: {len(dronActual.cajasR)}")
+        print(f"Costo acumulado: {dronActual.costo}")
+
         for d in range(len(recorrido)):
-            hTotal = 0
-            if recorrido[d].cajasR != []:
-                for caja in recorrido[d].cajasR:
-                    diferenciaFila = recorrido[d].ubicacion[0] - caja[0]
-                    diferenciaColumna = recorrido[d].ubicacion[1] - caja[1]
-                    h = abs(diferenciaFila) + abs(diferenciaColumna) + recorrido[d].costo
-                    print("Heuristica de" +str(recorrido[d].ubicacion)+ " es de "+str(h)+" hasta "+str(caja))
-                    hTotal += h
-                print("Heuristica total: "+str(hTotal))
-                if min_heuristica >= hTotal:
-                    min_heuristica = hTotal
-                    dronActual = recorrido[d]
-                    indice = d
+            if recorrido[d].cajasR:
+                # Calcular heurística (distancia al paquete más cercano)
+                distancias = [abs(recorrido[d].ubicacion[0] - caja[0]) + abs(recorrido[d].ubicacion[1] - caja[1]) 
+                            for caja in recorrido[d].cajasR]
+                h_actual = min(distancias) if distancias else 0
+                
+                # Calcular f(n) = g(n) + h(n)
+                f_actual = recorrido[d].costo + h_actual
+                
+                print(f"Nodo {recorrido[d].ubicacion}: costo={recorrido[d].costo}, heurística={h_actual}, total={f_actual}")
+                
+                # Seleccionar el nodo con menor f(n)
+                if f_actual < min_total or (f_actual == min_total and len(recorrido[d].cajasR) < len(recorrido[mejor_indice].cajasR)):
+                    min_total = f_actual
+                    mejor_indice = d
             else:
-                min_heuristica = hTotal
-                dronActual = recorrido[d]
-                indice = d
+                # Si no hay cajas restantes, seleccionar este nodo inmediatamente
+                mejor_indice = d
+                break
 
-        print("Minima heuristica: "+str(min_heuristica))
-        print(dronActual.ubicacion)
+        # Mensaje de depuración
+        print(f"Seleccionado: {recorrido[mejor_indice].ubicacion} con f(n)={min_total}")
+        dronActual = recorrido[mejor_indice]
+        # ===== FIN DEL BLOQUE DE HEURÍSTICA MODIFICADO =====
+
+        recorrido.pop(mejor_indice)
         
-        recorrido.pop(indice)
-
-        ciclo = dronActual.padre
-        while ciclo.ubicacion != 0:
-            if dronActual.ubicacion == ciclo.ubicacion:
-                recorrido.pop(0)
-                dronActual = recorrido[0]
-            ciclo = ciclo.padre
+        # ===== BLOQUE DE CICLOS MODIFICADO =====
+        if dronActual.padre.ubicacion != 0:  # No es el nodo raíz
+            ancestro = dronActual.padre
+            ciclo_detectado = False
+            
+            # Verificar si estamos volviendo a una posición anterior sin haber recolectado cajas
+            while ancestro.ubicacion != 0:
+                if (dronActual.ubicacion == ancestro.ubicacion and 
+                    dronActual.cajas == ancestro.cajas and 
+                    dronActual.costo >= ancestro.costo):
+                    ciclo_detectado = True
+                    break
+                ancestro = ancestro.padre
+            
+            if ciclo_detectado:
+                print(f"¡Ciclo detectado en {dronActual.ubicacion}! Eliminando nodo redundante.")
+                # Buscar y eliminar nodos duplicados en el recorrido con mayor o igual costo
+                recorrido = [nodo for nodo in recorrido 
+                            if not (nodo.ubicacion == dronActual.ubicacion and 
+                                  nodo.cajas == dronActual.cajas and 
+                                  nodo.costo >= dronActual.costo)]
+        # ===== FIN DEL BLOQUE DE CICLOS MODIFICADO =====
 
         nodos += 1
 
