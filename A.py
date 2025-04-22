@@ -115,7 +115,7 @@ def buscar_A(ambiente_txt):
                     hijo = dron([abajo[0],abajo[1]],dronActual,dronActual.cajas, dronActual.cajasR, dronActual.iteracion + 1, dronActual.costo+1)
                     recorrido.append(hijo)
 
-        # ===== BLOQUE DE HEURÍSTICA MODIFICADO PARA A* =====
+        #Bloque para la heuristica ========================================================
         min_total = float('inf')  # f(n) = g(n) + h(n)
         mejor_indice = 0
 
@@ -144,14 +144,13 @@ def buscar_A(ambiente_txt):
                 mejor_indice = d
                 break
 
-        # Mensaje de depuración
         print(f"Seleccionado: {recorrido[mejor_indice].ubicacion} con f(n)={min_total}")
         dronActual = recorrido[mejor_indice]
-        # ===== FIN DEL BLOQUE DE HEURÍSTICA MODIFICADO =====
+        # Fin del bloque =======================================================
 
         recorrido.pop(mejor_indice)
         
-        # ===== BLOQUE DE CICLOS MODIFICADO =====
+        #Bloque para eliminar ciclos ====================================================
         if dronActual.padre.ubicacion != 0:  # No es el nodo raíz
             ancestro = dronActual.padre
             ciclo_detectado = False
@@ -172,7 +171,7 @@ def buscar_A(ambiente_txt):
                             if not (nodo.ubicacion == dronActual.ubicacion and 
                                   nodo.cajas == dronActual.cajas and 
                                   nodo.costo >= dronActual.costo)]
-        # ===== FIN DEL BLOQUE DE CICLOS MODIFICADO =====
+        #Fin del bloque ==================================
 
         nodos += 1
 

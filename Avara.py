@@ -98,8 +98,7 @@ def busqueda_avara(ambiente_txt):
 
 
         #Bloque para la heuristica ========================================================
-        # ===== BLOQUE COMPLETO A REEMPLAZAR =====
-        min_heuristica = float('inf')
+        min_heuristica = float('inf') 
         mejor_indice = 0
 
         print(f"{dronActual.ubicacion}==========================================================")
@@ -124,7 +123,6 @@ def busqueda_avara(ambiente_txt):
                 mejor_indice = d
                 break
 
-        # Añadir mensaje de depuración (CONSEJO QUE TE DI)
         print(f"Transición: {dronActual.ubicacion} -> {recorrido[mejor_indice].ubicacion}")
 
         # Asignar el mejor nodo encontrado
@@ -132,14 +130,11 @@ def busqueda_avara(ambiente_txt):
 
         print(f"Mínima heurística encontrada: {min_heuristica}")
         print(f"Seleccionado: {dronActual.ubicacion} con {len(dronActual.cajasR)} cajas restantes")
-        # ===== FIN DEL BLOQUE MODIFICADO =====
-        #fin del bloque =======================================================
+        # Fin del bloque =======================================================
         
         recorrido.pop(mejor_indice)
 
-        #Bloque para eliminar ciclos
-        # ===== BLOQUE MODIFICADO =====
-        # Nuevo bloque para manejar ciclos inteligentemente
+        #Bloque para eliminar ciclos ====================================================
         if dronActual.padre.ubicacion != 0:  # Solo verificar si no es el nodo raíz
             ancestro = dronActual.padre
             es_ciclo_simple = False
@@ -171,7 +166,7 @@ def busqueda_avara(ambiente_txt):
                                 mejor_indice = d
                     dronActual = recorrido[mejor_indice]
                     recorrido.pop(mejor_indice)
-        # ===== FIN DEL BLOQUE MODIFICADO =====
+        #Fin del bloque ==================================
         nodos += 1
 
     print("Termino en: ==================================")
