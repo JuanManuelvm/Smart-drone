@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Canvas, Button, Menu, filedialog
+from tkinter import Canvas, Button, Menu
 import os
 import Amplitud, Costo, Profundidad, Avara, A
 from tkinter import messagebox as MessageBox
@@ -12,7 +12,6 @@ class LaberintoApp:
         # Configurar el tamaño de la ventana
         self.root.geometry("750x650")
         
-        # Variable para almacenar el archivo seleccionado
         self.NuevoAmbiente = "Prueba1.txt"  # Valor por defecto
         
         # Frame superior para controles
@@ -111,7 +110,7 @@ class LaberintoApp:
                     self.laberinto.append(fila)
         except FileNotFoundError:
             MessageBox.showerror("Error", f"No se encontró el archivo: {self.NuevoAmbiente}")
-            self.laberinto = [[0]]  # Matriz vacía por defecto si hay error        
+            self.laberinto = [[0]]      
     
     def mostrar_menu_noInformado(self):
         """Muestra un menú desplegable con las opciones de movimiento"""
@@ -156,7 +155,6 @@ class LaberintoApp:
     def mover_amplitud(self):
         """Implementación básica de movimiento por amplitud"""
         print("Ejecutando búsqueda en amplitud...")
-        # Aquí iría el algoritmo real de búsqueda en amplitud
         self.reiniciar()
         datos = Amplitud.busqueda_amplitud(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
@@ -165,7 +163,6 @@ class LaberintoApp:
     def mover_costo(self):
         """Implementación básica de movimiento por costo"""
         print("Ejecutando búsqueda de costo uniforme...")
-        # Aquí iría el algoritmo real de búsqueda de 
         self.reiniciar()
         datos = Costo.busqueda_costo(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
@@ -173,7 +170,6 @@ class LaberintoApp:
     def mover_profundidad(self):
         """Implementación básica de movimiento por profundidad"""
         print("Ejecutando búsqueda en profundidad...")
-        # Aquí iría el algoritmo real de búsqueda en profundidad
         self.reiniciar()
         datos = Profundidad.busqueda_profundidad(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
@@ -181,7 +177,6 @@ class LaberintoApp:
     def mover_avara(self):
         """Implementación básica de movimiento por Avara"""
         print("Ejecutando búsqueda en Avara...")
-        # Aquí iría el algoritmo real de búsqueda en Avara
         self.reiniciar()
         datos = Avara.busqueda_avara(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
@@ -189,7 +184,6 @@ class LaberintoApp:
     def mover_A(self):
         """Implementación básica de movimiento por A*"""
         print("Ejecutando búsqueda en A*...")
-        # Aquí iría el algoritmo real de búsqueda en A*
         self.reiniciar()
         datos = A.buscar_A(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
@@ -203,7 +197,7 @@ class LaberintoApp:
         def mover_paso(ni, nj):
             i, j = self.dron_pos
             if 0 <= ni < len(self.laberinto) and 0 <= nj < len(self.laberinto[0]):
-                if self.laberinto[ni][nj] == 0 or self.laberinto[ni][nj] == 3 or self.laberinto[ni][nj] == 4:  # Solo se puede mover a espacios vacíos
+                if self.laberinto[ni][nj] == 0 or self.laberinto[ni][nj] == 3 or self.laberinto[ni][nj] == 4:
                     # Actualizar matriz
                     self.laberinto[i][j] = 0
                     self.laberinto[ni][nj] = 2
@@ -213,7 +207,6 @@ class LaberintoApp:
                     self.canvas.delete("all")
                     self.dibujar_laberinto()
 
-        # Función recursiva para mover el dron en cada paso con retraso
         def mover_con_retraso(indice_paso):
             if indice_paso < len(pasos):
                 ni, nj = pasos[indice_paso]
@@ -225,7 +218,6 @@ class LaberintoApp:
         pasos_totales = len(pasos)
         mover_con_retraso(0)
 
-         # Al finalizar el recorrido, mostrar mensaje con los resultados
         if costo is not None:
             self.mostrar_resultados(pasos_totales, nodos, tiempo, costo)
         else:

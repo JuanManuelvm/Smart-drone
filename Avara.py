@@ -10,7 +10,6 @@ class dron():
     self.iteracion = iteracion
 
 def busqueda_avara(ambiente_txt):
-    #Ingresar los datos de un mundo determinado por medio de un archivo de texto que siga las convenciones dadas anteriormente.
     # Función para leer el archivo y organizar la información en una matriz
     def leer_matriz_desde_archivo(ambiente_txt):
         matriz = []
@@ -20,8 +19,6 @@ def busqueda_avara(ambiente_txt):
                 fila = [int(numero) for numero in línea.split()]
                 matriz.append(fila)
         return matriz
-
-    # Nombre del archivo
 
     # Leer la matriz desde el archivo
     ambiente = leer_matriz_desde_archivo(ambiente_txt)
@@ -104,7 +101,7 @@ def busqueda_avara(ambiente_txt):
         print(f"{dronActual.ubicacion}==========================================================")
         print(f"Cajas recolectadas: {dronActual.cajas}, Restantes: {len(dronActual.cajasR)}")
 
-        # Evaluar todos los nodos para encontrar el mejor
+        # Ciclo para evaluar nodos para encontrar el mejor
         for d in range(len(recorrido)):
             if recorrido[d].cajasR:
                 # Calcular distancia Manhattan a cada paquete restante
@@ -135,11 +132,11 @@ def busqueda_avara(ambiente_txt):
         recorrido.pop(mejor_indice)
 
         #Bloque para eliminar ciclos ====================================================
-        if dronActual.padre.ubicacion != 0:  # Solo verificar si no es el nodo raíz
+        if dronActual.padre.ubicacion != 0:
             ancestro = dronActual.padre
             es_ciclo_simple = False
             
-            # Verificar si estamos volviendo a una posición anterior sin haber recolectado caja
+            #Ciclo para evitar devolverse
             while ancestro.ubicacion != 0:
                 if dronActual.ubicacion == ancestro.ubicacion and dronActual.cajas == ancestro.cajas:
                     es_ciclo_simple = True

@@ -1,7 +1,6 @@
 import time
 
 def buscar_A(ambiente_txt):
-    #Ingresar los datos de un mundo determinado por medio de un archivo de texto que siga las convenciones dadas anteriormente.
     # Función para leer el archivo y organizar la información en una matriz
     def leer_matriz_desde_archivo(ambiente_txt):
         matriz = []
@@ -11,8 +10,6 @@ def buscar_A(ambiente_txt):
                 fila = [int(numero) for numero in línea.split()]
                 matriz.append(fila)
         return matriz
-
-    # Nombre del archivo
 
     # Leer la matriz desde el archivo
     ambiente = leer_matriz_desde_archivo(ambiente_txt)
@@ -155,7 +152,7 @@ def buscar_A(ambiente_txt):
             ancestro = dronActual.padre
             ciclo_detectado = False
             
-            # Verificar si estamos volviendo a una posición anterior sin haber recolectado cajas
+            # Ciclo para evitar devolvernos a una posición anterior sin haber recolectado cajas
             while ancestro.ubicacion != 0:
                 if (dronActual.ubicacion == ancestro.ubicacion and 
                     dronActual.cajas == ancestro.cajas and 
