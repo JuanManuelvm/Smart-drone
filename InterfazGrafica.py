@@ -1,9 +1,8 @@
 import tkinter as tk
-from tkinter import Canvas, Button, Menu
+from tkinter import Canvas, Button, Menu, filedialog
+import os
 import Amplitud, Costo, Profundidad, Avara, A
 from tkinter import messagebox as MessageBox
-
-NuevoAmbiente = "Prueba1.txt" 
 
 class LaberintoApp:
     def __init__(self, root):
@@ -11,22 +10,26 @@ class LaberintoApp:
         self.root.title("Laberinto Smart drone")
         
         # Configurar el tamaño de la ventana
-        self.root.geometry("750x600")
-        # Matriz del laberinto (0: vacío, 1: muro, 2: dron, 3: alerta, 4: caja)
-        def leer_matriz_desde_archivo(ambiente_txt):
-            matriz = []
-            with open(ambiente_txt, 'r') as archivo:
-                for línea in archivo:
-                    # Convertir cada línea en una lista de enteros
-                    fila = [int(numero) for numero in línea.split()]
-                    matriz.append(fila)
-            return matriz
-
-        # Nombre del archivo
-        ambiente_txt = NuevoAmbiente
-
-        # Leer la matriz desde el archivo
-        self.laberinto = leer_matriz_desde_archivo(ambiente_txt)
+        self.root.geometry("750x650")
+        
+        # Variable para almacenar el archivo seleccionado
+        self.NuevoAmbiente = "Prueba1.txt"  # Valor por defecto
+        
+        # Frame superior para controles
+        self.top_frame = tk.Frame(root)
+        self.top_frame.pack(pady=10)
+        
+        # Botón para seleccionar archivo
+        self.btn_seleccionar = Button(self.top_frame, text="Seleccionar Ambiente", 
+                                    command=self.seleccionar_archivo)
+        self.btn_seleccionar.pack(side=tk.LEFT, padx=10)
+        
+        # Etiqueta para mostrar el archivo seleccionado
+        self.lbl_archivo = tk.Label(self.top_frame, text=f"Archivo: {self.NuevoAmbiente}")
+        self.lbl_archivo.pack(side=tk.LEFT, padx=10)
+        
+        # Cargar el laberinto inicial
+        self.cargar_laberinto()
         
         # Tamaño de cada celda
         self.cell_size = 50
@@ -35,16 +38,13 @@ class LaberintoApp:
         self.canvas = Canvas(root, bg='white', 
                             width=len(self.laberinto[0])*self.cell_size, 
                             height=len(self.laberinto)*self.cell_size)
-        
         self.canvas.pack(expand=True)
-
+        
         # Dibujar el laberinto
         self.dibujar_laberinto()
         
-        
-        # Crear un frame para los botones
+        # Crear un frame para los botones de algoritmos
         self.botones_frame = tk.Frame(root)
-        
         self.botones_frame.pack(expand=True, pady=10)
         
         # Crear botón 1 con menú desplegable
@@ -64,7 +64,54 @@ class LaberintoApp:
         
         # Variable para almacenar la estrategia seleccionada
         self.estrategia = None
+
+    def seleccionar_archivo(self):
+        """Abre un diálogo para seleccionar el archivo del ambiente"""
+        # Obtener la lista de archivos .txt en el directorio actual
+        archivos = [f for f in os.listdir() if f.endswith('.txt')]
         
+        if not archivos:
+            MessageBox.showwarning("Advertencia", "No se encontraron archivos .txt en la carpeta")
+            return
+        
+        # Crear ventana de selección
+        seleccion = tk.Toplevel(self.root)
+        seleccion.title("Seleccionar archivo de ambiente")
+        seleccion.geometry("300x400")
+        
+        # Lista de archivos
+        lbl_titulo = tk.Label(seleccion, text="Seleccione un archivo:")
+        lbl_titulo.pack(pady=10)
+        
+        lista = tk.Listbox(seleccion)
+        for archivo in archivos:
+            lista.insert(tk.END, archivo)
+        lista.pack(expand=True, fill=tk.BOTH, padx=10, pady=5)
+        
+        # Botón de selección
+        btn_aceptar = Button(seleccion, text="Seleccionar", 
+                           command=lambda: self.actualizar_archivo(lista.get(tk.ACTIVE), seleccion))
+        btn_aceptar.pack(pady=10)
+
+    def actualizar_archivo(self, archivo, ventana_seleccion):
+        """Actualiza el archivo seleccionado y recarga el laberinto"""
+        self.NuevoAmbiente = archivo
+        self.lbl_archivo.config(text=f"Archivo: {self.NuevoAmbiente}")
+        ventana_seleccion.destroy()
+        self.cargar_laberinto()
+        self.reiniciar()
+    
+    def cargar_laberinto(self):
+        """Carga la matriz del laberinto desde el archivo seleccionado"""
+        try:
+            with open(self.NuevoAmbiente, 'r') as archivo:
+                self.laberinto = []
+                for línea in archivo:
+                    fila = [int(numero) for numero in línea.split()]
+                    self.laberinto.append(fila)
+        except FileNotFoundError:
+            MessageBox.showerror("Error", f"No se encontró el archivo: {self.NuevoAmbiente}")
+            self.laberinto = [[0]]  # Matriz vacía por defecto si hay error        
     
     def mostrar_menu_noInformado(self):
         """Muestra un menú desplegable con las opciones de movimiento"""
@@ -111,7 +158,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en amplitud...")
         # Aquí iría el algoritmo real de búsqueda en amplitud
         self.reiniciar()
-        datos = Amplitud.busqueda_amplitud(NuevoAmbiente)
+        datos = Amplitud.busqueda_amplitud(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
         
     
@@ -120,7 +167,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda de costo uniforme...")
         # Aquí iría el algoritmo real de búsqueda de 
         self.reiniciar()
-        datos = Costo.busqueda_costo(NuevoAmbiente)
+        datos = Costo.busqueda_costo(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
     
     def mover_profundidad(self):
@@ -128,7 +175,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en profundidad...")
         # Aquí iría el algoritmo real de búsqueda en profundidad
         self.reiniciar()
-        datos = Profundidad.busqueda_profundidad(NuevoAmbiente)
+        datos = Profundidad.busqueda_profundidad(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
 
     def mover_avara(self):
@@ -136,7 +183,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en Avara...")
         # Aquí iría el algoritmo real de búsqueda en Avara
         self.reiniciar()
-        datos = Avara.busqueda_avara(NuevoAmbiente)
+        datos = Avara.busqueda_avara(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2])
     
     def mover_A(self):
@@ -144,7 +191,7 @@ class LaberintoApp:
         print("Ejecutando búsqueda en A*...")
         # Aquí iría el algoritmo real de búsqueda en A*
         self.reiniciar()
-        datos = A.buscar_A(NuevoAmbiente)
+        datos = A.buscar_A(self.NuevoAmbiente)
         self.mover_dron_simple(datos[0],datos[1], datos[2], datos[3])
     
     def mover_dron_simple(self, pasos, nodos, tiempo, costo=None):
@@ -227,20 +274,7 @@ class LaberintoApp:
         
     def reiniciar(self):
         """Reinicia el laberinto a su estado original"""
-        # Matriz del laberinto (0: vacío, 1: muro, 2: dron, 3: alerta, 4: caja)
-        def leer_matriz_desde_archivo(ambiente_txt):
-            matriz = []
-            with open(ambiente_txt, 'r') as archivo:
-                for línea in archivo:
-                    # Convertir cada línea en una lista de enteros
-                    fila = [int(numero) for numero in línea.split()]
-                    matriz.append(fila)
-            return matriz
-        # Nombre del archivo
-        ambiente_txt = NuevoAmbiente
-
-        # Leer la matriz desde el archivo
-        self.laberinto = leer_matriz_desde_archivo(ambiente_txt)
+        self.cargar_laberinto()
         self.dron_pos = self.encontrar_dron()
         self.estrategia = None
         self.canvas.delete("all")
